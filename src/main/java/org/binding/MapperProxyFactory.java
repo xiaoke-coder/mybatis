@@ -1,5 +1,7 @@
 package org.binding;
 
+import org.session.SqlSession;
+
 import java.lang.reflect.Proxy;
 import java.util.Map;
 
@@ -13,7 +15,7 @@ public class MapperProxyFactory<T> {
         this.mapperInterface = mapperInterface;
     }
 
-    public T newInstance(Map<String, String> sqlSesssion) {
+    public T newInstance(SqlSession sqlSesssion) {
         final MapperProxy<T> mapperProxy = new MapperProxy<>(sqlSesssion, mapperInterface);
         // classloader interface invocationhandler
         return (T) Proxy.newProxyInstance(mapperInterface.getClassLoader(), new Class[]{mapperInterface}
