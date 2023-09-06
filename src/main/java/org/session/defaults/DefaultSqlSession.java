@@ -1,27 +1,17 @@
 package org.session.defaults;
 
 import org.binding.MapperRegistry;
+import org.mapping.MappedStatement;
+import org.session.Configuration;
 import org.session.SqlSession;
 
 
 
 public class DefaultSqlSession implements SqlSession {
+    private final Configuration configuration;
 
-//    private Connection connection;
-//    //    配置在<mappers>标签的mapper.xml位置  接口名到mapper标签配置的解析
-//    private Map<String, XNode> mapperElement;
-
-    /**
-     * 映射器注册机
-     */
-    private MapperRegistry mapperRegistry;
-
-//    public DefaultSqlSession(Connection connection, Map<String, XNode> mapperElement) {
-//        this.connection = connection;
-//        this.mapperElement = mapperElement;
-//    }
-    public DefaultSqlSession(MapperRegistry mapperRegistry) {
-        this.mapperRegistry = mapperRegistry;
+    public DefaultSqlSession(Configuration configuration) {
+        this.configuration = configuration;
     }
     @Override
     public <T> T selectOne(String statement) {
@@ -40,7 +30,8 @@ public class DefaultSqlSession implements SqlSession {
 
     @Override
     public <T> T selectOne(String statement, Object parameter) {
-        return (T) ("你的操作被代理了！" + "方法：" + statement + " 入参：" + parameter);
+        MappedStatement mappedStatement = configuration.getMappedStatement(statement);
+        return (T) ("你的操作被代理了！" + "\n方法：" + statement + " \n入参：" + parameter+ "\n待执行SQL：" + mappedStatement.getSql());
     }
 
 
@@ -201,6 +192,12 @@ public class DefaultSqlSession implements SqlSession {
 
     @Override
     public <T> T getMapper(Class<T> type) {
-        return mapperRegistry.getMapper(type, this);
+        return configuration.getMapper(type, this);
     }
+
+    @Override
+    public Configuration getConfiguration() {
+        return configuration;
+    }
+
 }

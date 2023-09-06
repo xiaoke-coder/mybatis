@@ -1,6 +1,7 @@
 package org.binding;
 
 import cn.hutool.core.lang.ClassScanner;
+import org.session.Configuration;
 import org.session.SqlSession;
 
 import java.util.HashMap;
@@ -12,6 +13,11 @@ import java.util.Set;
  * 接口名-代理类的映射
  */
 public class MapperRegistry {
+    private Configuration config;
+
+    public MapperRegistry(Configuration config) {
+        this.config = config;
+    }
 
     private final Map<Class<?> , MapperProxyFactory<?>> knownMappers = new HashMap<>();
 
@@ -23,7 +29,7 @@ public class MapperRegistry {
         }
     }
 
-    private<T> void addMapper(Class<T> type) {
+    public <T> void addMapper(Class<T> type) {
         if (type.isInterface()) {
             if (hasMpper(type)) {
                 throw new RuntimeException("Type" + type + "is already known to the MapperRegistry");

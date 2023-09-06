@@ -18,4 +18,6 @@ public interface SqlSession {
 //    void close();
 
     <T>T getMapper(Class<T> type);
+    Configuration getConfiguration();
+
 }

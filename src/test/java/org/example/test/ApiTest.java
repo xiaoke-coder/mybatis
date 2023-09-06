@@ -1,22 +1,16 @@
 package org.example.test;
 
-import com.alibaba.fastjson.JSON;
-import org.binding.MapperProxyFactory;
-import org.binding.MapperRegistry;
-import org.example.*;
+import org.io.Resources;
 import org.example.test.dao.IUserDao;
-import org.example.test.po.User;
 import org.junit.Test;
 import org.session.SqlSession;
 import org.session.SqlSessionFactory;
-import org.session.defaults.DefaultSqlSessionFactory;
+import org.session.SqlSessionFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.io.Reader;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 public class ApiTest {
@@ -76,21 +70,36 @@ public class ApiTest {
 //        logger.info("测试结果：{}", res);
 //    }
 
-    @Test
-    public void test_MapperProxyFactory() {
-        // 1. 注册 Mapper
-        MapperRegistry registry = new MapperRegistry();
-        registry.addMappers("org.example.test.dao");
+//    @Test
+//    public void test_MapperProxyFactory() {
+//        // 1. 注册 Mapper
+//        MapperRegistry registry = new MapperRegistry();
+//        registry.addMappers("org.example.test.dao");
+//
+//        // 2. 从 SqlSession 工厂获取 Session
+//        SqlSessionFactory sqlSessionFactory = new DefaultSqlSessionFactory(registry);
+//        SqlSession sqlSession = sqlSessionFactory.openSession();
+//
+//        // 3. 获取映射器对象
+//        IUserDao userDao = sqlSession.getMapper(IUserDao.class);
+//
+//        // 4. 测试验证
+//        String res = userDao.queryUserName("10001");
+//        logger.info("测试结果：{}", res);
+//    }
 
-        // 2. 从 SqlSession 工厂获取 Session
-        SqlSessionFactory sqlSessionFactory = new DefaultSqlSessionFactory(registry);
+    @Test
+    public void test_SqlSessionFactory() throws IOException {
+        // 1. 从SqlSessionFactory中获取SqlSession
+        Reader reader = Resources.getResourceAsReader("mybatis-config-datasource.xml");
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
         SqlSession sqlSession = sqlSessionFactory.openSession();
 
-        // 3. 获取映射器对象
+        // 2. 获取映射器对象
         IUserDao userDao = sqlSession.getMapper(IUserDao.class);
 
-        // 4. 测试验证
-        String res = userDao.queryUserName("10001");
+        // 3. 测试验证
+        String res = userDao.queryUserInfoById(10001L);
         logger.info("测试结果：{}", res);
     }
 
