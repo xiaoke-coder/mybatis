@@ -1,11 +1,15 @@
 package org.example.test;
 
+import com.alibaba.fastjson.JSON;
+import org.builder.xml.XMLConfigBuilder;
 import org.io.Resources;
 import org.example.test.dao.IUserDao;
 import org.junit.Test;
+import org.session.Configuration;
 import org.session.SqlSession;
 import org.session.SqlSessionFactory;
 import org.session.SqlSessionFactoryBuilder;
+import org.session.defaults.DefaultSqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -101,6 +105,22 @@ public class ApiTest {
         // 3. 测试验证
         String res = userDao.queryUserInfoById(10001L);
         logger.info("测试结果：{}", res);
+    }
+
+    @Test
+    public void test_selectOne() throws IOException {
+        // 解析 XML
+        Reader reader = Resources.getResourceAsReader("mybatis-config-datasource.xml");
+        XMLConfigBuilder xmlConfigBuilder = new XMLConfigBuilder(reader);
+        Configuration configuration = xmlConfigBuilder.parse();
+
+        // 获取 DefaultSqlSession
+        SqlSession sqlSession = new DefaultSqlSession(configuration);
+
+        // 执行查询：默认是一个集合参数
+        Object[] req = {1L};
+        Object res = sqlSession.selectOne("org.example.test.dao.IUserDao.queryUserInfoById", req);
+        logger.info("测试结果：{}", JSON.toJSONString(res));
     }
 
 }
