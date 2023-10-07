@@ -73,6 +73,7 @@ public class XMLConfigBuilder extends BaseBuilder {
         for (Element e: environmentList) {
             String id = e.attributeValue("id");
             if (environment.equals(id)) {
+                // 将配置和解析分开  任何新增的配置都不会影响解析逻辑
                 TransactionFactory txFactory = (TransactionFactory) typeAliasRegistry
                         .resolveAlias(e.element("transactionManager").attributeValue("type")).newInstance();
                 Element dataSourceElement = e.element("dataSource");

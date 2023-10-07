@@ -40,7 +40,9 @@ public class DefaultSqlSession implements SqlSession {
         try{
             MappedStatement mappedStatement = configuration.getMappedStatement(statement);
             Environment environment = configuration.getEnvironment();
-
+            /**
+             * 根据配置的数据源获取相应的连接
+             */
             Connection connection = environment.getDataSource().getConnection();
             BoundSql boundSql = mappedStatement.getBoundSql();
             PreparedStatement preparedStatement = connection.prepareStatement(boundSql.getSql());

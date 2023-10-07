@@ -3,7 +3,11 @@ package org.session;
 import lombok.Getter;
 import lombok.Setter;
 import org.binding.MapperRegistry;
+import org.datasource.Unpooled.UnpooledDataSource;
+import org.datasource.Unpooled.UnpooledDataSourceFactory;
 import org.datasource.druid.DruidDataSourceFactory;
+import org.datasource.pooled.PooledDataSource;
+import org.datasource.pooled.PooledDataSourceFactory;
 import org.mapping.Environment;
 import org.mapping.MappedStatement;
 import org.session.defaults.DefaultSqlSession;
@@ -41,7 +45,10 @@ public class Configuration {
      */
     public Configuration() {
         typeAliasRegistry.registerAlias("JDBC", JdbcTransactionFactory.class);
+
         typeAliasRegistry.registerAlias("DRUID", DruidDataSourceFactory.class);
+        typeAliasRegistry.registerAlias("UNPOOLED", UnpooledDataSourceFactory.class);
+        typeAliasRegistry.registerAlias("POOLED", PooledDataSourceFactory.class);
     }
 
 
